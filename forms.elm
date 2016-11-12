@@ -2,6 +2,7 @@ import Html exposing (..)
 import Html.App as App
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
+import String
 
 main =
   App.beginnerProgram { model = model, view = view, update = update }
@@ -55,9 +56,12 @@ viewValidation : Model -> Html Msg
 viewValidation model =
   let
     (color, message) =
-      if model.password == model.passwordAgain then
+      if String.length model.password <= 8 then
+        ("red", "Password should be longer than 8 characters!")
+      else if model.password == model.passwordAgain then
         ("green", "OK")
       else
         ("red", "Passwords do not match!")
   in
     div [ style [("color", color)] ] [ text message ]
+
