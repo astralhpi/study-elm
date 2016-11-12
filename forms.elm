@@ -15,11 +15,12 @@ type alias Model =
   { name : String
   , password : String
   , passwordAgain : String
+  , age: String
   }
 
 model : Model
 model =
-  Model "" "" ""
+  Model "" "" "" ""
 
 
 -- UPDATE
@@ -28,6 +29,7 @@ type Msg
   = Name String
   | Password String
   | PasswordAgain String
+  | Age String
 
 
 update : Msg -> Model -> Model
@@ -42,6 +44,9 @@ update msg model =
     PasswordAgain password ->
       { model | passwordAgain = password }
 
+    Age age ->
+      { model | age = age }
+
 -- VIEW
 
 view : Model -> Html Msg
@@ -50,6 +55,7 @@ view model =
     [ input [ type' "text", placeholder "Name", onInput Name ] []
     , input [ type' "password", placeholder "Password", onInput Password ] []
     , input [ type' "password", placeholder "Re-enter Password", onInput PasswordAgain] []
+    , input [ type' "text", placeholder "Age", onInput Age ] []
     , viewValidation model
     ]
 
@@ -57,7 +63,9 @@ viewValidation : Model -> Html Msg
 viewValidation model =
   let
     (color, message) =
-      if String.length model.password <= 8 then
+      if not (String.all Char.isDigit model.age) then
+        ("red", "Age should be number")
+      else if String.length model.password <= 8 then
         ("red", "Password should be longer than 8 characters!")
       else if not (String.any Char.isUpper model.password) then
         ("red", "Password should have upper case")
