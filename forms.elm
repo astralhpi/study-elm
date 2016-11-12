@@ -3,6 +3,7 @@ import Html.App as App
 import Html.Attributes exposing (..)
 import Html.Events exposing (onInput)
 import String
+import Char
 
 main =
   App.beginnerProgram { model = model, view = view, update = update }
@@ -58,10 +59,15 @@ viewValidation model =
     (color, message) =
       if String.length model.password <= 8 then
         ("red", "Password should be longer than 8 characters!")
-      else if model.password == model.passwordAgain then
-        ("green", "OK")
-      else
+      else if not (String.any Char.isUpper model.password) then
+        ("red", "Password should have upper case")
+      else if not (String.any Char.isLower model.password) then
+        ("red", "Password should have lower case")
+      else if not (String.any Char.isDigit model.password) then
+        ("red", "Password should have digit")
+      else if not (model.password == model.passwordAgain) then
         ("red", "Passwords do not match!")
+      else
+        ("green", "OK")
   in
     div [ style [("color", color)] ] [ text message ]
-
